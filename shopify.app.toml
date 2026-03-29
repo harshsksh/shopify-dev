@@ -7,18 +7,17 @@ embedded = true
 
 [build]
 automatically_update_urls_on_dev = true
-include_config_on_deploy = true
 
 [webhooks]
 api_version = "2026-04"
 
   [[webhooks.subscriptions]]
   topics = [ "app/uninstalled" ]
-  uri = "/webhooks/app/uninstalled"
+  uri = "https://example.com/webhooks/app/uninstalled"
 
   [[webhooks.subscriptions]]
   topics = [ "app/scopes_update" ]
-  uri = "/webhooks/app/scopes_update"
+  uri = "https://example.com/webhooks/app/scopes_update"
 
 [access_scopes]
 # Learn more at https://shopify.dev/docs/apps/tools/cli/configuration#access_scopes
@@ -27,26 +26,70 @@ scopes = "read_products,write_products,read_metaobjects,write_metaobjects,write_
 [auth]
 redirect_urls = [ "https://example.com/api/auth" ]
 
-[product.metafields.app.demo_info]
+# Product Metafields - Phase 3
+[product.metafields.custom.material]
 type = "single_line_text_field"
-name = "Demo Source Info"
-description = "Tracks products created by the Shopify app template for development"
+name = "Material"
+description = "What the product is made of"
 
-  [product.metafields.app.demo_info.access]
+  [product.metafields.custom.material.access]
+  admin = "merchant_read_write"
+  storefront = "public_read"
+
+[product.metafields.custom.care_instructions]
+type = "multi_line_text_field"
+name = "Care Instructions"
+description = "How to care for this product"
+
+  [product.metafields.custom.care_instructions.access]
   admin = "merchant_read_write"
 
-[metaobjects.app.example]
-name = "Example"
-description = "An example metaobject definition created by this template"
+[product.metafields.custom.rating]
+type = "number_decimal"
+name = "Rating"
+description = "Product rating from 0 to 5"
 
-  [metaobjects.app.example.access]
+  [product.metafields.custom.rating.access]
+  admin = "merchant_read_write"
+  storefront = "public_read"
+
+# Author Metaobject - Phase 3
+[metaobjects.app.author]
+name = "Author"
+description = "Content authors for products"
+
+  [metaobjects.app.author.access]
   admin = "merchant_read_write"
 
-[metaobjects.app.example.fields.title]
-name = "Title"
+[metaobjects.app.author.fields.name]
+name = "Name"
 type = "single_line_text_field"
 required = true
 
-[metaobjects.app.example.fields.description]
-name = "Description"
+[metaobjects.app.author.fields.bio]
+name = "Bio"
 type = "multi_line_text_field"
+required = false
+
+[metaobjects.app.author.fields.avatar]
+name = "Avatar"
+type = "file_reference"
+required = false
+
+# Size Chart Metaobject - Phase 3
+[metaobjects.app.size_chart]
+name = "Size Chart"
+description = "Reusable size charts for products"
+
+  [metaobjects.app.size_chart.access]
+  admin = "merchant_read_write"
+
+[metaobjects.app.size_chart.fields.chart_name]
+name = "Chart Name"
+type = "single_line_text_field"
+required = true
+
+[metaobjects.app.size_chart.fields.chart_data]
+name = "Chart Data"
+type = "json"
+required = false

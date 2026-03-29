@@ -1,19 +1,18 @@
-import { json } from "react-router";
 import { useLoaderData, useNavigate, useActionData } from "react-router";
 import { boundary } from "@shopify/shopify-app-react-router/server";
-import { authenticate } from "../../shopify.server";
-import { getProducts, deleteProduct } from "../../models/product.server";
+import { authenticate } from "../shopify.server";
+import { getProducts, deleteProduct } from "../models/product.server";
 
 export const loader = async ({ request }) => {
   const { admin } = await authenticate.admin(request);
-  
+
   const url = new URL(request.url);
   const after = url.searchParams.get("after");
   const first = parseInt(url.searchParams.get("first") || "25", 10);
-  
+
   const products = await getProducts(admin, after, first);
-  
-  return json({ products });
+
+  return { products };
 };
 
 export const action = async ({ request }) => {
@@ -24,10 +23,10 @@ export const action = async ({ request }) => {
   if (action === "delete") {
     const productId = formData.get("productId");
     const result = await deleteProduct(admin, productId);
-    return json(result);
+    return result;
   }
 
-  return json({ error: "Invalid action" }, { status: 400 });
+  return { error: "Invalid action" };
 };
 
 export default function ProductsIndex() {
@@ -91,7 +90,7 @@ export default function ProductsIndex() {
                 {products.edges.map(({ node }) => {
                   const variant = node.variants.edges[0]?.node || {};
                   const image = node.images.edges[0]?.node || {};
-                  
+
                   return (
                     <tr key={node.id}>
                       <td>
