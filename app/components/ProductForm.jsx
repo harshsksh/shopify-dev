@@ -220,6 +220,56 @@ export default function ProductForm({ product = null, isEdit = false }) {
           <option value="archived">Archived</option>
         </s-select>
 
+        {/* Metafields Section - Product Details */}
+        <s-section heading="Product Details">
+          <s-stack direction="block" gap="base">
+            <s-grid columns={2}>
+              <s-text-field
+                label="Material"
+                name="metafields[material]"
+                value={formData.metafields.material}
+                onChange={(value) =>
+                  setFormData({
+                    ...formData,
+                    metafields: { ...formData.metafields, material: value },
+                  })
+                }
+                helpText="e.g., Cotton, Polyester, Leather"
+              />
+
+              <s-number-field
+                label="Rating"
+                name="metafields[rating]"
+                value={formData.metafields.rating}
+                onChange={(value) =>
+                  setFormData({
+                    ...formData,
+                    metafields: { ...formData.metafields, rating: value },
+                  })
+                }
+                min={0}
+                max={5}
+                step={0.1}
+                helpText="Product rating from 0 to 5"
+              />
+            </s-grid>
+
+            <s-text-area
+              label="Care Instructions"
+              name="metafields[care_instructions]"
+              value={formData.metafields.care_instructions}
+              onChange={(value) =>
+                setFormData({
+                  ...formData,
+                  metafields: { ...formData.metafields, care_instructions: value },
+                })
+              }
+              rows={3}
+              helpText="How to care for this product (washing, storage, etc.)"
+            />
+          </s-stack>
+        </s-section>
+
         {/* Variants Section */}
         <s-section heading="Variants">
           <s-stack direction="block" gap="base">
