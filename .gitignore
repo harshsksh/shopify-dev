@@ -33,6 +33,7 @@ database.sqlite
 # Progress tracking files (local only)
 /PHASE_1_CHECKLIST.md
 /PHASE_2_CHECKLIST.md
+/PHASE_2_SUMMARY.md
 /PHASE_3_CHECKLIST.md
 /PHASE_4_CHECKLIST.md
 /PHASE_5_CHECKLIST.md
