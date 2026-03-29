@@ -97,6 +97,7 @@ export default function ProductForm({ product = null, isEdit = false }) {
     submitData.append("productType", formData.productType);
     submitData.append("tags", formData.tags);
     submitData.append("status", formData.status);
+    submitData.append("metafields", JSON.stringify(formData.metafields));
     submitData.append("variants", JSON.stringify(formData.variants));
 
     if (product?.id) {

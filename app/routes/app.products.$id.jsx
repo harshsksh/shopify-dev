@@ -35,6 +35,9 @@ export const action = async ({ request, params }) => {
 
   try {
     if (action === "create") {
+      const metafieldsRaw = formData.get("metafields");
+      const metafields = metafieldsRaw ? JSON.parse(metafieldsRaw) : null;
+
       const productInput = {
         title: formData.get("title"),
         description: formData.get("description"),
@@ -42,6 +45,7 @@ export const action = async ({ request, params }) => {
         productType: formData.get("productType"),
         tags: formData.get("tags")?.split(",").map((t) => t.trim()).filter(Boolean),
         status: formData.get("status"),
+        metafields: metafields,
         variants: JSON.parse(formData.get("variants") || "[]").map((v) => ({
           price: v.price,
           sku: v.sku,
@@ -66,6 +70,8 @@ export const action = async ({ request, params }) => {
 
     if (action === "update") {
       const productId = formData.get("productId");
+      const metafieldsRaw = formData.get("metafields");
+      const metafields = metafieldsRaw ? JSON.parse(metafieldsRaw) : null;
 
       const productInput = {
         title: formData.get("title"),
@@ -74,6 +80,7 @@ export const action = async ({ request, params }) => {
         productType: formData.get("productType"),
         tags: formData.get("tags")?.split(",").map((t) => t.trim()).filter(Boolean),
         status: formData.get("status"),
+        metafields: metafields,
       };
 
       const result = await updateProduct(admin, productId, productInput);
