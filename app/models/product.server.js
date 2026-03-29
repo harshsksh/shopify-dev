@@ -9,7 +9,7 @@ import { apiVersion } from "../shopify.server";
  */
 export async function getProducts(admin, after = null, first = 25) {
   const afterClause = after ? `, after: "${after}"` : "";
-  
+
   const response = await admin.graphql(
     `#graphql
       query GetProducts($first: Int!) {
@@ -163,6 +163,32 @@ export async function getProduct(admin, productId) {
  * @returns {Promise<Object>} Created product and errors
  */
 export async function createProduct(admin, productInput) {
+  const input = { ...productInput };
+
+  // Handle metafields if provided
+  if (productInput.metafields) {
+    input.metafields = [
+      {
+        namespace: "custom",
+        key: "material",
+        value: productInput.metafields.material || "",
+        type: "single_line_text_field",
+      },
+      {
+        namespace: "custom",
+        key: "care_instructions",
+        value: productInput.metafields.care_instructions || "",
+        type: "multi_line_text_field",
+      },
+      {
+        namespace: "custom",
+        key: "rating",
+        value: productInput.metafields.rating || "0",
+        type: "number_decimal",
+      },
+    ];
+  }
+
   const response = await admin.graphql(
     `#graphql
       mutation productCreate($input: ProductInput!) {
@@ -180,7 +206,7 @@ export async function createProduct(admin, productInput) {
         }
       }
     `,
-    { variables: { input: productInput } }
+    { variables: { input } }
   );
 
   return response.json();
@@ -194,6 +220,32 @@ export async function createProduct(admin, productInput) {
  * @returns {Promise<Object>} Updated product and errors
  */
 export async function updateProduct(admin, productId, productInput) {
+  const input = { id: productId, ...productInput };
+
+  // Handle metafields if provided
+  if (productInput.metafields) {
+    input.metafields = [
+      {
+        namespace: "custom",
+        key: "material",
+        value: productInput.metafields.material || "",
+        type: "single_line_text_field",
+      },
+      {
+        namespace: "custom",
+        key: "care_instructions",
+        value: productInput.metafields.care_instructions || "",
+        type: "multi_line_text_field",
+      },
+      {
+        namespace: "custom",
+        key: "rating",
+        value: productInput.metafields.rating || "0",
+        type: "number_decimal",
+      },
+    ];
+  }
+
   const response = await admin.graphql(
     `#graphql
       mutation productUpdate($input: ProductInput!) {
@@ -212,7 +264,7 @@ export async function updateProduct(admin, productId, productInput) {
         }
       }
     `,
-    { variables: { input: { id: productId, ...productInput } } }
+    { variables: { input } }
   );
 
   return response.json();
