@@ -12,7 +12,7 @@ export default function ProductForm({ product = null, isEdit = false }) {
   const fetcher = useFetcher();
   const shopify = useAppBridge();
   const navigate = useNavigate();
-  
+
   const [formData, setFormData] = useState({
     title: product?.title || "",
     description: product?.description || "",
@@ -20,6 +20,17 @@ export default function ProductForm({ product = null, isEdit = false }) {
     productType: product?.productType || "",
     tags: product?.tags?.join(", ") || "",
     status: product?.status || "draft",
+    metafields: {
+      material: product?.metafields?.edges.find(
+        (e) => e.node.namespace === "custom" && e.node.key === "material"
+      )?.node.value || "",
+      care_instructions: product?.metafields?.edges.find(
+        (e) => e.node.namespace === "custom" && e.node.key === "care_instructions"
+      )?.node.value || "",
+      rating: product?.metafields?.edges.find(
+        (e) => e.node.namespace === "custom" && e.node.key === "rating"
+      )?.node.value || "",
+    },
     variants: product?.variants?.edges.map((e) => ({
       id: e.node.id,
       title: e.node.title,
@@ -70,7 +81,7 @@ export default function ProductForm({ product = null, isEdit = false }) {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    
+
     if (!validate()) {
       shopify.toast.show("Please fix the errors", { error: true });
       return;
@@ -221,7 +232,7 @@ export default function ProductForm({ product = null, isEdit = false }) {
               >
                 <s-stack direction="block" gap="tight">
                   <s-heading level={4}>Variant {index + 1}</s-heading>
-                  
+
                   <s-grid columns={2}>
                     <s-text-field
                       label="Title"
