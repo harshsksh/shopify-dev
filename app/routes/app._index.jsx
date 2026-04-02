@@ -303,13 +303,24 @@ export default function Index() {
       <s-section slot="aside" heading="Next steps">
         <s-unordered-list>
           <s-list-item>
-            Build an{" "}
-            <s-link
-              href="https://shopify.dev/docs/apps/getting-started/build-app-example"
-              target="_blank"
-            >
-              example app
+            Manage{" "}
+            <s-link href="/app/products">
+              Products
             </s-link>
+          </s-list-item>
+          <s-list-item>
+            Manage{" "}
+            <s-link href="/app/authors">
+              Authors
+            </s-link>{" "}
+            (metaobjects)
+          </s-list-item>
+          <s-list-item>
+            Manage{" "}
+            <s-link href="/app/size-charts">
+              Size Charts
+            </s-link>{" "}
+            (metaobjects)
           </s-list-item>
           <s-list-item>
             Explore Shopify&apos;s API with{" "}
