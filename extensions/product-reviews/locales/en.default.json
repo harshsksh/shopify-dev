@@ -1,0 +1,16 @@
+{
+  "productReviews": {
+    "heading": "Product Details",
+    "rating": "Rating",
+    "material": "Material",
+    "careInstructions": "Care Instructions",
+    "designedBy": "Designed by",
+    "sizeChart": "Size Chart",
+    "noReviews": "No reviews yet",
+    "writeReview": "Write a Review",
+    "showSizeChart": "Show Size Chart",
+    "hideSizeChart": "Hide Size Chart",
+    "readMore": "Read more",
+    "showLess": "Show less"
+  }
+}

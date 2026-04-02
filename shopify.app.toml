@@ -53,6 +53,13 @@ description = "Product rating from 0 to 5"
   admin = "merchant_read_write"
   storefront = "public_read"
 
+# Product Metaobject References - Phase 4
+# Note: To add author/size chart references to products:
+# 1. Go to Shopify Admin > Settings > Custom data > Products
+# 2. Add metafield with type "Reference" > "Metaobject"
+# 3. Select the metaobject type (author or size_chart)
+# Or use GraphQL API to create metafields programmatically
+
 # Author Metaobject - Phase 3
 [metaobjects.app.author]
 name = "Author"

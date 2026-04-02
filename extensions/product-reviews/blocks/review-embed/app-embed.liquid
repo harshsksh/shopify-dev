@@ -1,0 +1,61 @@
+{% comment %}
+  Global Review Widget Embed
+  Loads review widget functionality on all pages
+{% endcomment %}
+
+<script>
+  window.ProductReviewsConfig = {
+    enabled: {{ block.settings.enabled }},
+    showOnProductPages: {{ block.settings.show_on_product_pages }},
+    autoInit: {{ block.settings.auto_init }}
+  };
+</script>
+
+{% if block.settings.load_css %}
+  {{ 'product-reviews.css' | asset_url | stylesheet_tag }}
+{% endif %}
+
+{% if block.settings.load_javascript %}
+  <script src="{{ 'product-reviews.js' | asset_url }}" defer></script>
+{% endif %}
+
+{% schema %}
+{
+  "name": "Review Widget",
+  "target": "body",
+  "javascript": "product-reviews.js",
+  "stylesheet": "product-reviews.css",
+  "settings": [
+    {
+      "type": "checkbox",
+      "id": "enabled",
+      "label": "Enable widget",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "show_on_product_pages",
+      "label": "Show on product pages",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "auto_init",
+      "label": "Auto-initialize",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "load_css",
+      "label": "Load CSS",
+      "default": true
+    },
+    {
+      "type": "checkbox",
+      "id": "load_javascript",
+      "label": "Load JavaScript",
+      "default": true
+    }
+  ]
+}
+{% endschema %}
