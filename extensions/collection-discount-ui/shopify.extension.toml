@@ -1,0 +1,11 @@
+name = "collection-discount-ui"
+type = "ui_extension"
+
+[[targets]]
+target = "admin.discount-details.function-settings.render"
+
+[[targets.metafields]]
+namespace = "$app"
+key = "function-configuration"
+type = "json"
+access.admin = "merchant_read_write"

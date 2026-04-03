@@ -1,0 +1,35 @@
+query CartLinesInput {
+  cart {
+    lines {
+      id
+      quantity
+      merchandise {
+        __typename
+        ... on ProductVariant {
+          id
+          price {
+            amount
+            currencyCode
+          }
+          product {
+            id
+            collections(first: 10) {
+              edges {
+                node {
+                  id
+                  handle
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+  discount {
+    discountClass
+    metafield(namespace: "$app", key: "function-configuration") {
+      jsonValue
+    }
+  }
+}

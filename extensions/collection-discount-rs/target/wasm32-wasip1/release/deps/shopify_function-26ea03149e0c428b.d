@@ -1,0 +1,10 @@
+c:\Users\hr392\Desktop\DEV\shopify\learn\extensions\collection-discount-rs\target\wasm32-wasip1\release\deps\shopify_function-26ea03149e0c428b.d: C:\Users\hr392\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\shopify_function-0.7.0\src\lib.rs C:\Users\hr392\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\shopify_function-0.7.0\src\enums.rs C:\Users\hr392\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\shopify_function-0.7.0\src\scalars.rs C:\Users\hr392\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\shopify_function-0.7.0\src\scalars\decimal.rs
+
+c:\Users\hr392\Desktop\DEV\shopify\learn\extensions\collection-discount-rs\target\wasm32-wasip1\release\deps\libshopify_function-26ea03149e0c428b.rlib: C:\Users\hr392\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\shopify_function-0.7.0\src\lib.rs C:\Users\hr392\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\shopify_function-0.7.0\src\enums.rs C:\Users\hr392\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\shopify_function-0.7.0\src\scalars.rs C:\Users\hr392\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\shopify_function-0.7.0\src\scalars\decimal.rs
+
+c:\Users\hr392\Desktop\DEV\shopify\learn\extensions\collection-discount-rs\target\wasm32-wasip1\release\deps\libshopify_function-26ea03149e0c428b.rmeta: C:\Users\hr392\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\shopify_function-0.7.0\src\lib.rs C:\Users\hr392\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\shopify_function-0.7.0\src\enums.rs C:\Users\hr392\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\shopify_function-0.7.0\src\scalars.rs C:\Users\hr392\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\shopify_function-0.7.0\src\scalars\decimal.rs
+
+C:\Users\hr392\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\shopify_function-0.7.0\src\lib.rs:
+C:\Users\hr392\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\shopify_function-0.7.0\src\enums.rs:
+C:\Users\hr392\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\shopify_function-0.7.0\src\scalars.rs:
+C:\Users\hr392\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\shopify_function-0.7.0\src\scalars\decimal.rs:

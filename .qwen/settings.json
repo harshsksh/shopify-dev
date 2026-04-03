@@ -3,7 +3,12 @@
     "allow": [
       "Bash(npm run *)",
       "Bash(npx *)",
-      "Bash(mkdir *)"
+      "Bash(mkdir *)",
+      "Bash(rustc *)",
+      "Bash(cargo *)",
+      "Bash(winget *)",
+      "Bash(rustup *)",
+      "Bash(set *)"
     ]
   },
   "$version": 3

@@ -1,0 +1,25 @@
+name = "collection-discount-rs"
+type = "function"
+description = "Collection-based percentage discount function"
+
+[build]
+command = "cargo build --target=wasm32-wasip1 --release"
+path = "target/wasm32-wasip1/release/collection_discount_rs.wasm"
+
+[targeting]
+targets = [
+  "cart.lines.discounts.generate.run",
+  "cart.delivery-options.discounts.generate.run"
+]
+
+[discount]
+class = ["product", "order", "shipping"]
+
+[discount.metafields.app.function-configuration]
+namespace = "$app"
+key = "function-configuration"
+type = "json"
+access.admin = "merchant_read_write"
+
+[extensions.ui]
+handle = "collection-discount-ui"
