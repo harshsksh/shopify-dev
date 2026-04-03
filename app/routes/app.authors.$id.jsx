@@ -30,19 +30,38 @@ export const action = async ({ request, params }) => {
   const formData = await request.formData();
   const { id } = params;
 
-  const name = formData.get("name");
-  const bio = formData.get("bio");
-  const handle = formData.get("handle") || name.toLowerCase().replace(/\s+/g, "-");
+  try {
+    const name = formData.get("name");
+    const bio = formData.get("bio");
+    const handle = formData.get("handle") || name?.toLowerCase().replace(/\s+/g, "-");
 
-  if (!name || name.trim() === "") {
-    return { errors: [{ field: ["name"], message: "Name is required" }] };
-  }
+    if (!name || name.trim() === "") {
+      return { errors: [{ field: ["name"], message: "Name is required" }] };
+    }
 
-  if (id === "new") {
-    const result = await createMetaobject(
+    if (id === "new") {
+      const result = await createMetaobject(
+        admin,
+        "author",
+        handle,
+        name,
+        [
+          { key: "name", value: name },
+          { key: "bio", value: bio || "" },
+        ]
+      );
+
+      if (result.metaobjectCreate.userErrors.length > 0) {
+        return { errors: result.metaobjectCreate.userErrors };
+      }
+
+      throw redirect("/app/authors");
+    }
+
+    const result = await updateMetaobject(
       admin,
       "author",
-      handle,
+      id,
       name,
       [
         { key: "name", value: name },
@@ -50,29 +69,18 @@ export const action = async ({ request, params }) => {
       ]
     );
 
-    if (result.metaobjectCreate.userErrors.length > 0) {
-      return { errors: result.metaobjectCreate.userErrors };
+    if (result.metaobjectUpdate.userErrors.length > 0) {
+      return { errors: result.metaobjectUpdate.userErrors };
     }
 
     throw redirect("/app/authors");
+  } catch (error) {
+    if (error instanceof Response && error.headers.has("Location")) {
+      throw error;
+    }
+    console.error("[Author] Action error:", error);
+    return { errors: [{ field: ["general"], message: "Failed to save author. Please try again." }] };
   }
-
-  const result = await updateMetaobject(
-    admin,
-    "author",
-    id,
-    name,
-    [
-      { key: "name", value: name },
-      { key: "bio", value: bio || "" },
-    ]
-  );
-
-  if (result.metaobjectUpdate.userErrors.length > 0) {
-    return { errors: result.metaobjectUpdate.userErrors };
-  }
-
-  throw redirect("/app/authors");
 };
 
 export default function AuthorEdit() {

@@ -30,29 +30,48 @@ export const action = async ({ request, params }) => {
   const formData = await request.formData();
   const { id } = params;
 
-  const chartName = formData.get("chart_name");
-  const chartData = formData.get("chart_data");
-  const handle = formData.get("handle") || chartName.toLowerCase().replace(/\s+/g, "-");
+  try {
+    const chartName = formData.get("chart_name");
+    const chartData = formData.get("chart_data");
+    const handle = formData.get("handle") || chartName?.toLowerCase().replace(/\s+/g, "-");
 
-  if (!chartName || chartName.trim() === "") {
-    return { errors: [{ field: ["chart_name"], message: "Chart name is required" }] };
-  }
-
-  // Validate JSON if provided
-  let parsedChartData = null;
-  if (chartData && chartData.trim() !== "") {
-    try {
-      parsedChartData = JSON.parse(chartData);
-    } catch (e) {
-      return { errors: [{ field: ["chart_data"], message: "Chart data must be valid JSON" }] };
+    if (!chartName || chartName.trim() === "") {
+      return { errors: [{ field: ["chart_name"], message: "Chart name is required" }] };
     }
-  }
 
-  if (id === "new") {
-    const result = await createMetaobject(
+    // Validate JSON if provided
+    let parsedChartData = null;
+    if (chartData && chartData.trim() !== "") {
+      try {
+        parsedChartData = JSON.parse(chartData);
+      } catch (e) {
+        return { errors: [{ field: ["chart_data"], message: "Chart data must be valid JSON" }] };
+      }
+    }
+
+    if (id === "new") {
+      const result = await createMetaobject(
+        admin,
+        "size_chart",
+        handle,
+        chartName,
+        [
+          { key: "chart_name", value: chartName },
+          { key: "chart_data", value: JSON.stringify(parsedChartData || {}) },
+        ]
+      );
+
+      if (result.metaobjectCreate.userErrors.length > 0) {
+        return { errors: result.metaobjectCreate.userErrors };
+      }
+
+      throw redirect("/app/size-charts");
+    }
+
+    const result = await updateMetaobject(
       admin,
       "size_chart",
-      handle,
+      id,
       chartName,
       [
         { key: "chart_name", value: chartName },
@@ -60,29 +79,18 @@ export const action = async ({ request, params }) => {
       ]
     );
 
-    if (result.metaobjectCreate.userErrors.length > 0) {
-      return { errors: result.metaobjectCreate.userErrors };
+    if (result.metaobjectUpdate.userErrors.length > 0) {
+      return { errors: result.metaobjectUpdate.userErrors };
     }
 
     throw redirect("/app/size-charts");
+  } catch (error) {
+    if (error instanceof Response && error.headers.has("Location")) {
+      throw error;
+    }
+    console.error("[SizeChart] Action error:", error);
+    return { errors: [{ field: ["general"], message: "Failed to save size chart. Please try again." }] };
   }
-
-  const result = await updateMetaobject(
-    admin,
-    "size_chart",
-    id,
-    chartName,
-    [
-      { key: "chart_name", value: chartName },
-      { key: "chart_data", value: JSON.stringify(parsedChartData || {}) },
-    ]
-  );
-
-  if (result.metaobjectUpdate.userErrors.length > 0) {
-    return { errors: result.metaobjectUpdate.userErrors };
-  }
-
-  throw redirect("/app/size-charts");
 };
 
 export default function SizeChartEdit() {
