@@ -244,25 +244,6 @@ export async function updateProduct(admin, productId, productInput) {
         type: "number_decimal",
       },
     ];
-
-    // Add metaobject references if provided
-    if (productInput.metafields.author) {
-      input.metafields.push({
-        namespace: "custom",
-        key: "author",
-        value: productInput.metafields.author,
-        type: "metaobject_reference",
-      });
-    }
-
-    if (productInput.metafields.size_chart) {
-      input.metafields.push({
-        namespace: "custom",
-        key: "size_chart",
-        value: productInput.metafields.size_chart,
-        type: "metaobject_reference",
-      });
-    }
   }
 
   const response = await admin.graphql(
