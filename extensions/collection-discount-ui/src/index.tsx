@@ -6,7 +6,7 @@ import {
   Checkbox,
   BlockStack,
 } from "@shopify/ui-extensions-react/admin";
-import { useExtensionData } from "@shopify/ui-extensions-react/admin";
+import { useExtensionApi } from "@shopify/ui-extensions-react/admin";
 
 interface DiscountConfig {
   collection_ids: string[];
@@ -19,11 +19,11 @@ interface DiscountConfig {
  * Renders in the Shopify Admin when merchants configure the discount function
  */
 export default function DiscountSettings() {
-  const { extensionData } = useExtensionData();
+  const { extensionData } = useExtensionApi();
   
   // Parse existing configuration from metafield
   const config: DiscountConfig = JSON.parse(
-    extensionData.metafield?.value || 
+    extensionData?.metafield?.value || 
     '{"collection_ids":[],"discount_percentage":0,"applies_to_shipping":false}'
   );
 

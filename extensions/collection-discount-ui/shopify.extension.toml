@@ -1,10 +1,13 @@
 name = "collection-discount-ui"
+uid = "e855f5bf-3a04-244a-289a-7c2fb68f52f81cbf4cf3"
 type = "ui_extension"
+api_version = "2025-07"
 
-[[targets]]
+[[targeting]]
 target = "admin.discount-details.function-settings.render"
+module = "./src/index.tsx"
 
-[[targets.metafields]]
+[[targeting.metafields]]
 namespace = "$app"
 key = "function-configuration"
 type = "json"

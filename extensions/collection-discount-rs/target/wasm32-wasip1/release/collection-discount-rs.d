@@ -1,0 +1,1 @@
+c:\Users\hr392\Desktop\DEV\shopify\learn\extensions\collection-discount-rs\target\wasm32-wasip1\release\collection-discount-rs.wasm: c:\Users\hr392\Desktop\DEV\shopify\learn\extensions\collection-discount-rs\src\main.rs

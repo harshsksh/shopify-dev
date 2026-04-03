@@ -9,7 +9,12 @@
       "Bash(winget *)",
       "Bash(rustup *)",
       "Bash(set *)",
-      "Bash(dir *)"
+      "Bash(dir *)",
+      "Bash(npm install)",
+      "Bash(setx *)",
+      "Bash(build.bat)",
+      "Bash(npm view *)",
+      "Bash(findstr *)"
     ]
   },
   "$version": 3

@@ -1,11 +1,11 @@
 //! Collection Discount Function
 //! Applies percentage discounts to products in specific collections
-//! 
-//! This function reads JSON input from Shopify, applies discount logic,
-//! and returns JSON output with discount operations.
+//!
+//! This function reads JSON input from stdin, applies discount logic,
+//! and writes JSON output to stdout.
 
 use serde::{Deserialize, Serialize};
-use std::io::{self, Read};
+use std::io::{self, Read, Write};
 
 /// Configuration for the discount function
 #[derive(Deserialize, Serialize, Debug, Default, Clone)]
@@ -222,10 +222,12 @@ fn run(input: Input) -> FunctionResult {
 
 fn main() {
     let mut input_str = String::new();
-    io::stdin().read_to_string(&mut input_str).unwrap();
+    io::stdin().read_to_string(&mut input_str).expect("Failed to read input");
     
-    let input: Input = serde_json::from_str(&input_str).unwrap();
+    let input: Input = serde_json::from_str(&input_str).expect("Failed to parse input");
     let result = run(input);
     
-    println!("{}", serde_json::to_string(&result).unwrap());
+    let output = serde_json::to_string(&result).expect("Failed to serialize output");
+    io::stdout().write_all(output.as_bytes()).expect("Failed to write output");
+    io::stdout().flush().expect("Failed to flush output");
 }
