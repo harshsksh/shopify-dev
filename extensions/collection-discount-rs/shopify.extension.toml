@@ -3,8 +3,8 @@ type = "function"
 description = "Collection-based percentage discount function"
 
 [build]
-command = "cargo build --target=wasm32-wasip1 --release"
-path = "target/wasm32-wasip1/release/collection_discount_rs.wasm"
+command = "cargo build --target=wasm32-unknown-unknown --release"
+path = "target/wasm32-unknown-unknown/release/collection-discount-rs.wasm"
 
 [targeting]
 targets = [

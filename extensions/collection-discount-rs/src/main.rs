@@ -1,27 +1,156 @@
-use shopify_function::{prelude::*, CartLinesDiscountsGenerateRunInput};
-use serde::Deserialize;
+//! Collection Discount Function
+//! Applies percentage discounts to products in specific collections
+//! 
+//! This function reads JSON input from Shopify, applies discount logic,
+//! and returns JSON output with discount operations.
 
-/// Configuration for the discount function, stored in metafields
-#[derive(Deserialize, Debug, Default)]
+use serde::{Deserialize, Serialize};
+use std::io::{self, Read};
+
+/// Configuration for the discount function
+#[derive(Deserialize, Serialize, Debug, Default, Clone)]
 pub struct DiscountConfiguration {
-    /// List of collection IDs to apply discount to
+    #[serde(default)]
     pub collection_ids: Vec<String>,
-    /// Discount percentage (0-100)
+    #[serde(default)]
     pub discount_percentage: f64,
-    /// Whether to apply discount to shipping
+    #[serde(default)]
     pub applies_to_shipping: bool,
 }
 
-#[derive(Debug)]
-pub struct RunOutput;
+/// Input structure matching the GraphQL query
+#[derive(Deserialize, Debug)]
+pub struct Input {
+    pub cart: Cart,
+    pub discount: Discount,
+}
 
-/// Main discount function entry point
-/// Runs when cart lines are evaluated for discounts
-#[function]
-pub fn cart_lines_discounts_generate_run(
-    input: CartLinesDiscountsGenerateRunInput,
-) -> Result<RunOutput> {
-    // Parse configuration from metafield
+#[derive(Deserialize, Debug)]
+pub struct Cart {
+    pub lines: Vec<CartLine>,
+}
+
+#[derive(Deserialize, Debug)]
+pub struct CartLine {
+    pub id: String,
+    pub quantity: u32,
+    pub merchandise: Merchandise,
+}
+
+#[derive(Deserialize, Debug)]
+pub struct Merchandise {
+    #[serde(rename = "__typename")]
+    pub typename: String,
+    #[serde(flatten)]
+    pub variant: Option<ProductVariant>,
+}
+
+#[derive(Deserialize, Debug)]
+pub struct ProductVariant {
+    pub id: String,
+    pub price: Price,
+    pub product: Product,
+}
+
+#[derive(Deserialize, Debug)]
+pub struct Price {
+    pub amount: String,
+    pub currency_code: String,
+}
+
+#[derive(Deserialize, Debug)]
+pub struct Product {
+    pub id: String,
+    pub collections: CollectionsConnection,
+}
+
+#[derive(Deserialize, Debug)]
+pub struct CollectionsConnection {
+    pub edges: Vec<CollectionEdge>,
+}
+
+#[derive(Deserialize, Debug)]
+pub struct CollectionEdge {
+    pub node: Option<CollectionNode>,
+}
+
+#[derive(Deserialize, Debug)]
+pub struct CollectionNode {
+    pub id: String,
+    pub handle: String,
+}
+
+#[derive(Deserialize, Debug)]
+pub struct Discount {
+    pub discount_class: String,
+    pub metafield: Option<Metafield>,
+}
+
+#[derive(Deserialize, Debug)]
+pub struct Metafield {
+    #[serde(rename = "jsonValue")]
+    pub json_value: Option<String>,
+}
+
+/// Output operations for the discount function
+#[derive(Serialize, Debug)]
+pub struct FunctionResult {
+    pub operations: Vec<Operation>,
+}
+
+#[derive(Serialize, Debug)]
+#[serde(tag = "type")]
+pub enum Operation {
+    #[serde(rename = "productDiscount")]
+    ProductDiscount {
+        targets: Vec<ProductTarget>,
+        value: DiscountValue,
+    },
+    #[serde(rename = "orderDiscount")]
+    OrderDiscount {
+        targets: Vec<OrderTarget>,
+        value: DiscountValue,
+    },
+    #[serde(rename = "shippingDiscount")]
+    ShippingDiscount {
+        targets: Vec<ShippingTarget>,
+        value: DiscountValue,
+    },
+}
+
+#[derive(Serialize, Debug)]
+pub struct ProductTarget {
+    pub product_variant: ProductVariantTarget,
+}
+
+#[derive(Serialize, Debug)]
+pub struct ProductVariantTarget {
+    pub id: String,
+}
+
+#[derive(Serialize, Debug)]
+pub struct OrderTarget {
+    pub order: OrderDiscountTarget,
+}
+
+#[derive(Serialize, Debug)]
+pub struct OrderDiscountTarget {}
+
+#[derive(Serialize, Debug)]
+pub struct ShippingTarget {
+    pub delivery: DeliveryDiscountTarget,
+}
+
+#[derive(Serialize, Debug)]
+pub struct DeliveryDiscountTarget {}
+
+#[derive(Serialize, Debug)]
+pub struct DiscountValue {
+    pub percentage: Option<f64>,
+}
+
+/// Main function - processes cart and applies discounts
+fn run(input: Input) -> FunctionResult {
     let config: DiscountConfiguration = input
         .discount
         .metafield
@@ -32,9 +161,9 @@ pub fn cart_lines_discounts_generate_run(
     let mut operations = vec![];
 
     // Handle product discounts
-    if input.discount.discount_class == "product" {
-        for line in input.cart.lines {
-            if let Some(variant) = line.merchandise.as_product_variant() {
+    if input.discount.discount_class == "PRODUCT" && !config.collection_ids.is_empty() {
+        for line in &input.cart.lines {
+            if let Some(variant) = &line.merchandise.variant {
                 let product_collections: Vec<String> = variant
                     .product
                     .collections
@@ -43,21 +172,19 @@ pub fn cart_lines_discounts_generate_run(
                     .filter_map(|edge| edge.node.as_ref().map(|n| n.id.clone()))
                     .collect();
 
-                // Check if product is in target collections
                 let matches = config
                     .collection_ids
                     .iter()
                     .any(|id| product_collections.contains(id));
 
                 if matches {
-                    operations.push(ProductDiscountsAddOperation {
-                        discount_application_strategy: "ACROSS",
-                        target: ProductDiscountTarget {
+                    operations.push(Operation::ProductDiscount {
+                        targets: vec![ProductTarget {
                             product_variant: ProductVariantTarget {
-                                id: variant.id,
+                                id: variant.id.clone(),
                             },
-                        },
-                        value: PricingValue {
+                        }],
+                        value: DiscountValue {
                             percentage: Some(config.discount_percentage),
                         },
                     });
@@ -66,31 +193,39 @@ pub fn cart_lines_discounts_generate_run(
         }
     }
 
-    // Handle order discounts (subtotal)
-    if input.discount.discount_class == "order" && config.discount_percentage > 0.0 {
-        operations.push(OrderDiscountsAddOperation {
-            discount_application_strategy: "ACROSS",
-            target: OrderDiscountTarget {
-                order: OrderTarget {},
-            },
-            value: PricingValue {
+    // Handle order discounts
+    if input.discount.discount_class == "ORDER" && config.discount_percentage > 0.0 {
+        operations.push(Operation::OrderDiscount {
+            targets: vec![OrderTarget {
+                order: OrderDiscountTarget {},
+            }],
+            value: DiscountValue {
                 percentage: Some(config.discount_percentage),
             },
         });
     }
 
     // Handle shipping discounts
-    if input.discount.discount_class == "shipping" && config.applies_to_shipping {
-        operations.push(DeliveryDiscountsAddOperation {
-            discount_application_strategy: "ACROSS",
-            target: DeliveryDiscountTarget {
-                delivery: DeliveryTarget {},
-            },
-            value: PricingValue {
+    if input.discount.discount_class == "SHIPPING" && config.applies_to_shipping {
+        operations.push(Operation::ShippingDiscount {
+            targets: vec![ShippingTarget {
+                delivery: DeliveryDiscountTarget {},
+            }],
+            value: DiscountValue {
                 percentage: Some(config.discount_percentage),
             },
         });
     }
 
-    Ok(operations.into())
+    FunctionResult { operations }
+}
+
+fn main() {
+    let mut input_str = String::new();
+    io::stdin().read_to_string(&mut input_str).unwrap();
+    
+    let input: Input = serde_json::from_str(&input_str).unwrap();
+    let result = run(input);
+    
+    println!("{}", serde_json::to_string(&result).unwrap());
 }

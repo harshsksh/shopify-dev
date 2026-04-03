@@ -1,0 +1,9 @@
+c:\Users\hr392\Desktop\DEV\shopify\learn\extensions\collection-discount-rs\target\wasm32-wasip1\release\deps\shopify_function_wasm_api_core-d467b2f33bb1f232.d: C:\Users\hr392\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\shopify_function_wasm_api_core-0.2.0\src\lib.rs C:\Users\hr392\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\shopify_function_wasm_api_core-0.2.0\src\read.rs C:\Users\hr392\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\shopify_function_wasm_api_core-0.2.0\src\write.rs
+
+c:\Users\hr392\Desktop\DEV\shopify\learn\extensions\collection-discount-rs\target\wasm32-wasip1\release\deps\libshopify_function_wasm_api_core-d467b2f33bb1f232.rlib: C:\Users\hr392\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\shopify_function_wasm_api_core-0.2.0\src\lib.rs C:\Users\hr392\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\shopify_function_wasm_api_core-0.2.0\src\read.rs C:\Users\hr392\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\shopify_function_wasm_api_core-0.2.0\src\write.rs
+
+c:\Users\hr392\Desktop\DEV\shopify\learn\extensions\collection-discount-rs\target\wasm32-wasip1\release\deps\libshopify_function_wasm_api_core-d467b2f33bb1f232.rmeta: C:\Users\hr392\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\shopify_function_wasm_api_core-0.2.0\src\lib.rs C:\Users\hr392\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\shopify_function_wasm_api_core-0.2.0\src\read.rs C:\Users\hr392\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\shopify_function_wasm_api_core-0.2.0\src\write.rs
+
+C:\Users\hr392\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\shopify_function_wasm_api_core-0.2.0\src\lib.rs:
+C:\Users\hr392\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\shopify_function_wasm_api_core-0.2.0\src\read.rs:
+C:\Users\hr392\.cargo\registry\src\index.crates.io-1949cf8c6b5b557f\shopify_function_wasm_api_core-0.2.0\src\write.rs:
